@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Sequelize } from "sequelize";
 
 export const sequelize = new Sequelize({
@@ -7,5 +8,4 @@ export const sequelize = new Sequelize({
     username: process.env.DB_USER,
     port: process.env.DB_PORT,
     dialect: 'postgres',
-    
 })
