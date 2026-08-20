@@ -3,14 +3,23 @@ import { useState } from "react";
 import ButtonSideBar from "../components/ButtonSideBar";
 import LoginButton from "../components/LoginButton";
 import ModalLogin from "../components/ModalLogin";
+import ModalCadastro from "../components/ModalCadastro";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalLogin, setModalLogin] = useState(false)
+  const [modalCadastro, setModalCadastro] = useState(false)
 
-  const closeModal = () => {
+  const closeModalLogin = () => {
     setModalLogin(false)
   }
+  
+  const closeModalCadastro = () => {
+    setModalCadastro(false)
+  }
+
+
+  
   return (
     <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0]">
       <div className="flex flex-col w-70 h-full bg-[#333333]">
@@ -39,14 +48,14 @@ export default function Home() {
       </div>
 
       <main className="flex flex-1 flex-col">
-        <div className="flex h-20 justify-end items-center mr-10">
-          <LoginButton onClick={() => setModalLogin(true)}></LoginButton>
+        <div className="flex h-20 justify-end gap-4 items-center mr-10">
+          { isLoggedIn ? null : <LoginButton name={'Cadastrar'} onClick={() => setModalCadastro(true)}></LoginButton>}
+          { isLoggedIn ? null : <LoginButton name={'Login'} onClick={() => setModalLogin(true)}></LoginButton>}
         </div>
-
-        
       </main>
       
-      {modalLogin ? <ModalLogin closeModal={closeModal}></ModalLogin> : null}
+      {modalLogin ? <ModalLogin closeModal={closeModalLogin}></ModalLogin> : null}
+      {modalCadastro ? <ModalCadastro closeModal={closeModalCadastro}></ModalCadastro> : null}
     </div>
     
   );

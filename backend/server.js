@@ -4,13 +4,21 @@ import { seedUsers, Usuario } from './model/Usuario.model.js'
 import { Atividade, seedAtividades } from './model/Atividade.model.js'
 import './model/relations.js'
 import { sequelize } from './database/init.js'
+import { corsConfig } from './middlewares/cors.config.js'
+import { routerUsuario } from './routes/Usuario.routes.js'
 
 
 const app = express()
+
 const port = process.env.APP_PORT
 
 
 app.use(express.json())
+app.use(corsConfig)
+
+
+
+app.use('/usuario', routerUsuario)
 
 app.get('/', (req, res) => {
 
