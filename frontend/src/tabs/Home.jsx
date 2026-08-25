@@ -1,5 +1,5 @@
 import { Dumbbell, Share2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ButtonSideBar from "../components/ButtonSideBar";
 import LoginButton from "../components/LoginButton";
 import ModalLogin from "../components/ModalLogin";
@@ -10,8 +10,19 @@ export default function Home() {
   const [modalLogin, setModalLogin] = useState(false)
   const [modalCadastro, setModalCadastro] = useState(false)
 
+
+  useEffect(() => {
+
+    const token = localStorage.getItem('token')
+
+    if(isLoggedIn){
+      closeModalLogin()
+    }
+  }, [isLoggedIn])
+
   const closeModalLogin = () => {
     setModalLogin(false)
+    alert('Usuário Logado')
   }
   
   const closeModalCadastro = () => {
@@ -54,7 +65,7 @@ export default function Home() {
         </div>
       </main>
       
-      {modalLogin ? <ModalLogin closeModal={closeModalLogin}></ModalLogin> : null}
+      {modalLogin ? <ModalLogin closeModal={closeModalLogin} setIsLoggedIn={setIsLoggedIn}></ModalLogin> : null}
       {modalCadastro ? <ModalCadastro closeModal={closeModalCadastro}></ModalCadastro> : null}
     </div>
     

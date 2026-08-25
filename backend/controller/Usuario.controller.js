@@ -13,7 +13,7 @@ export const controllerUsuario = {
       res.status(200).json({
         message: "Usuário criado com sucesso",
         content: response,
-        sucess: true
+        success: true
       });
     } catch (err) {
       console.error(err.message);
@@ -21,7 +21,7 @@ export const controllerUsuario = {
       res.status(501).json({
         message: "Erro no banco de dados",
         erro: err.message,
-        sucess:  false
+        success:  false
       });
     }
   },
@@ -48,13 +48,13 @@ export const controllerUsuario = {
         res.status(200).json({
           message: "Login bem sucedido",
           token,
-          sucess: true
+          success: true
         });
       } else {
         res.status(401).json({
           message: "Falha no login",
           data: response,
-          sucess:  false
+          success:  false
         });
       }
     } catch (err) {
@@ -63,8 +63,15 @@ export const controllerUsuario = {
       res.status(501).json({
         message: "Erro no banco de dados",
         erro: err.message,
-        sucess: false
+        success: false
       });
     }
   },
+  returnLogin: async (req, res) => {
+
+    res.status(200).json({
+      message: 'Login realizado',
+      success: true
+    })
+  }
 };

@@ -3,7 +3,7 @@ import Input from "./Input";
 import { schemaLoginUsuario } from "../zod_schemas/schemaLoginUsuario";
 import { loginUsuario } from "../services/Login.service";
 
-export default function ModalLogin({ closeModal }) {
+export default function ModalLogin({ closeModal, setIsLoggedIn }) {
   const [logando, setLogando] = useState(false);
   const [msgParaUsuario, setMsgParaUsuario] = useState('')
   const [email, setEmail] = useState("");
@@ -22,9 +22,13 @@ export default function ModalLogin({ closeModal }) {
     if (objLogin.success) {
       const response = await loginUsuario(objLogin.data);
 
+      console.log(response)
+
       if(response.success){
-
-
+        console.log('usuario logado')
+        localStorage.setItem('token', response.token)
+        setIsLoggedIn(true)
+        setLogando(false)
       }
 
       setLogando(false);

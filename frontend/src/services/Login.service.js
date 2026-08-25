@@ -13,7 +13,19 @@ export const loginUsuario = async (usuario) => {
     const data = await response.json()
 
     console.log(data);
+
+    return data
   } catch (err) {
     console.error(err.message);
   }
 };
+
+
+export const verificarTokenUsuario = async (token) => {
+  try {
+
+  }
+  catch(e){
+    
+  }
+}
