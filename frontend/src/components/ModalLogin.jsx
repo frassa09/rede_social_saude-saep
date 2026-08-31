@@ -30,6 +30,9 @@ export default function ModalLogin({ closeModal, setIsLoggedIn }) {
         setIsLoggedIn(true)
         setLogando(false)
       }
+      else {
+        alert('Login incorreto, corrija as informações e tente novamente')
+      }
 
       setLogando(false);
     } else {

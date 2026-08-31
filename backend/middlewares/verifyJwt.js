@@ -5,8 +5,9 @@ export const verifyJwt = (req, res, next) => {
     const { authorization } = req.headers
 
 
-    const token = authorization.split('')[1]
+    const token = authorization.split(' ')[1]
 
+ 
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
 
         if(err){

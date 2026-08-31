@@ -10,22 +10,30 @@ export const loginUsuario = async (usuario) => {
       body: JSON.stringify(usuario),
     });
 
-    const data = await response.json()
+    const data = await response.json();
 
     console.log(data);
 
-    return data
+    return data;
   } catch (err) {
     console.error(err.message);
   }
 };
 
-
 export const verificarTokenUsuario = async (token) => {
   try {
+    const response = await fetch(`${api_url}/usuario/auth/login`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
+    const data = await response.json();
+
+    console.log(data)
+    return data
+  } catch (err) {
+    console.error(err.message);
   }
-  catch(e){
-    
-  }
-}
+};
