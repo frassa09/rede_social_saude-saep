@@ -31,7 +31,7 @@ app.get('/', (req, res) => {
 
 
 
-sequelize.sync({alter: true, force: true}).then(async () => {
+sequelize.sync({alter: true}).then(async () => {
     await seedUsers()
     await seedAtividades()
     app.listen(port, () => {
