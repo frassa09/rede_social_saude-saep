@@ -39,5 +39,5 @@ export const seedUsers = async () => await Usuario.bulkCreate(
         {nome: 'usuario2', email: 'usuario2@email.com', nome_usuario: 'usuario02', imagem: 'usuario02.jpg', senha: '123456'},
         {nome: 'usuario3', email: 'usuario3@email.com', nome_usuario: 'usuario03', imagem: 'usuario03.jpg', senha: '123456'},
     ],
-    {validate: true, updateOnDuplicate: true}
+    {validate: true, updateOnDuplicate: ['nome', 'email', 'nome_usuario', 'imagem', 'senha']}
 )
