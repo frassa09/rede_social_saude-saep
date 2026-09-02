@@ -118,6 +118,6 @@ export const seedAtividades = async () => {
         usuario_id: usuarioExemplo.id,
       },
     ],
-    { validate: true },
+    { validate: true, updateOnDuplicate: true },
   );
 };
