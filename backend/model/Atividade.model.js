@@ -118,6 +118,6 @@ export const seedAtividades = async () => {
         usuario_id: usuarioExemplo.id,
       },
     ],
-    { validate: true, updateOnDuplicate: true },
+    { validate: true, updateOnDuplicate: ['tipo_atividade', 'distancia_percorrida', 'duracao atividade', 'quantidade_calorias', 'usuario_id'] },
   );
 };
