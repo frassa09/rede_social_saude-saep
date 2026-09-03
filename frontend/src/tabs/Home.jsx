@@ -76,12 +76,14 @@ export default function Home() {
               <span className="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
                 ● Conectado
               </span>
-              <button
+              
+              <LoginButton
+              name={"Sair"}
                 onClick={fazerLogout}
                 className="text-sm text-red-600 hover:underline cursor-pointer"
               >
-                Sair
-              </button>
+                
+              </LoginButton>
             </div>
           ) : (
             <>
@@ -90,7 +92,7 @@ export default function Home() {
                 onClick={() => setModalCadastro(true)}
               />
               <LoginButton
-                name={"Login"}
+                name={"Entrar"}
                 onClick={() => setModalLogin(true)}
               />
             </>
@@ -100,6 +102,10 @@ export default function Home() {
 
         <div className="">
           <CardActivity></CardActivity>
+          <CardActivity></CardActivity>
+          <CardActivity></CardActivity>
+          <CardActivity></CardActivity>
+          
         </div>
       </main>
 
