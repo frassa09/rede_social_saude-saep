@@ -5,6 +5,7 @@ import LoginButton from "../components/LoginButton";
 import ModalLogin from "../components/ModalLogin";
 import ModalCadastro from "../components/ModalCadastro";
 import { verificarTokenUsuario } from "../services/Login.service";
+import CardActivity from "../components/CardActivity";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -83,6 +84,11 @@ export default function Home() {
               onClick={() => setModalLogin(true)}
             ></LoginButton>
           )}
+        </div>
+
+
+        <div className="">
+          <CardActivity></CardActivity>
         </div>
       </main>
 
