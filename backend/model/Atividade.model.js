@@ -10,15 +10,15 @@ export const Atividade = sequelize.define(
       allowNull: false,
     },
     distancia_percorrida: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     duracao_atividade: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     quantidade_calorias: {
-      type: DataTypes.TEXT,
+      type: DataTypes.INTEGER,
       allowNull: true,
     },
   },
