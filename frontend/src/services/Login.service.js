@@ -13,10 +13,11 @@ export const loginUsuario = async (usuario) => {
     const data = await response.json();
 
     console.log(data);
-
-    return data;
+    return { success: response.ok, ...data };
+   
   } catch (err) {
-    console.error(err.message);
+    console.error("Erro no loginUsuario:", err.message);
+    return { success: false, message: "Falha de conexão com o servidor." };
   }
 };
 
@@ -29,11 +30,14 @@ export const verificarTokenUsuario = async (token) => {
       },
     });
 
+    if (!response.ok) return { success: false };
+
     const data = await response.json();
 
     console.log(data)
-    return data
+    return { success: true, ...data };
   } catch (err) {
-    console.error(err.message);
+    console.error("Erro no verificarTokenUsuario:", err.message);
+    return { success: false };
   }
 };
