@@ -21,6 +21,9 @@ export default function Home() {
 
   useEffect(() => {
     const verificarToken = async () => {
+  useEffect(() => {
+    const verificarToken = async () => {
+
       const token = localStorage.getItem("token");
       if (!token) return;
 
@@ -85,6 +88,17 @@ export default function Home() {
 
   return (
     <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0]">
+  const closeModalLogin = () => setModalLogin(false);
+  const closeModalCadastro = () => setModalCadastro(false);
+
+  const fazerLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
+  return (
+    <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0]">
+      {/* SIDEBAR */}
       <div className="flex flex-col w-70 h-full bg-[#333333]">
         <h1 className="flex justify-center text-4xl text-[#F3F0F0] mt-10 font-bold">
           SAEPSaúde
@@ -114,6 +128,25 @@ export default function Home() {
       <main className="flex flex-1 flex-col p-6 overflow-y-auto">
         <div className="flex h-20 justify-end gap-4 items-center mr-10">
           {!isLoggedIn && (
+      {/* CONTEÚDO PRINCIPAL */}
+      <main className="flex flex-1 flex-col">
+        <div className="flex h-20 justify-end gap-4 items-center mr-10">
+          {isLoggedIn ? (
+            /* FEEDBACK VISUAL DE USUÁRIO CONECTADO + BOTAO DE SAIR */
+            <div className="flex items-center gap-4">
+              <span className="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
+                ● Conectado
+              </span>
+              
+              <LoginButton
+              name={"Sair"}
+                onClick={fazerLogout}
+                className="text-sm text-red-600 hover:underline cursor-pointer"
+              >
+                
+              </LoginButton>
+            </div>
+          ) : (
             <>
               <LoginButton
                 name={"Cadastrar"}
@@ -121,6 +154,7 @@ export default function Home() {
               />
               <LoginButton
                 name={"Login"}
+                name={"Entrar"}
                 onClick={() => setModalLogin(true)}
               />
             </>
@@ -211,6 +245,17 @@ export default function Home() {
       </main>
 
       {/* modais */}
+
+        <div className="">
+          <CardActivity></CardActivity>
+          <CardActivity></CardActivity>
+          <CardActivity></CardActivity>
+          <CardActivity></CardActivity>
+          
+        </div>
+      </main>
+
+      {/* MODAIS */}
       {modalLogin && (
         <ModalLogin
           closeModal={closeModalLogin}
@@ -222,4 +267,5 @@ export default function Home() {
       )}
     </div>
   );
+}
 }
