@@ -12,6 +12,15 @@ export default function Home() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalCadastro, setModalCadastro] = useState(false);
 
+  //estados dos filtros de paginacao
+  const [categoriaAtiva, setCategoriaAtiva] = useState("");
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [atividades, setAtividades] = useState([]);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const verificarToken = async () => {
   useEffect(() => {
     const verificarToken = async () => {
 
@@ -31,6 +40,54 @@ export default function Home() {
     verificarToken();
   }, []);
 
+  //busca as atividades sempre que trocar a categoria ou a página
+  useEffect(() => {
+    carregarAtividades();
+  }, [categoriaAtiva, paginaAtual]);
+
+  const carregarAtividades = async () => {
+    setLoading(true);
+    try {
+      // parametros com limite de 4 itens por pagina
+      const params = new URLSearchParams({
+        pagina: paginaAtual,
+        limite: 4,
+      });
+
+      if (categoriaAtiva) {
+        params.append("tipo_atividade", categoriaAtiva);
+      }
+
+      const response = await fetch(`http://localhost:3333/atividade?${params.toString()}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        setAtividades(data.atividades || data.rows || data);
+        if (data.totalPaginas) setTotalPaginas(data.totalPaginas);
+      }
+    } catch (error) {
+      console.error("Erro ao buscar atividades:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFiltrar = (categoria) => {
+    if (!isLoggedIn) {
+      setModalLogin(true); 
+      return;
+    }
+
+    const novaCategoria = categoriaAtiva === categoria ? "" : categoria;
+    setCategoriaAtiva(novaCategoria);
+    setPaginaAtual(1);
+  };
+
+  const closeModalLogin = () => setModalLogin(false);
+  const closeModalCadastro = () => setModalCadastro(false);
+
+  return (
+    <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0]">
   const closeModalLogin = () => setModalLogin(false);
   const closeModalCadastro = () => setModalCadastro(false);
 
@@ -67,6 +124,10 @@ export default function Home() {
         </div>
       </div>
 
+      {/* conteudo principal */}
+      <main className="flex flex-1 flex-col p-6 overflow-y-auto">
+        <div className="flex h-20 justify-end gap-4 items-center mr-10">
+          {!isLoggedIn && (
       {/* CONTEÚDO PRINCIPAL */}
       <main className="flex flex-1 flex-col">
         <div className="flex h-20 justify-end gap-4 items-center mr-10">
@@ -92,6 +153,7 @@ export default function Home() {
                 onClick={() => setModalCadastro(true)}
               />
               <LoginButton
+                name={"Login"}
                 name={"Entrar"}
                 onClick={() => setModalLogin(true)}
               />
@@ -99,6 +161,90 @@ export default function Home() {
           )}
         </div>
 
+        {/* filtros por categoria */}
+        <div className="flex items-center justify-between border-b border-gray-300 pb-4 mb-6">
+          <div className="flex gap-3">
+            <button
+              onClick={() => handleFiltrar("corrida")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all cursor-pointer ${
+                categoriaAtiva === "corrida"
+                  ? "bg-black text-white shadow"
+                  : "bg-white text-gray-700 border hover:bg-gray-100"
+              }`}
+            >
+              Corrida
+            </button>
+
+            <button
+              onClick={() => handleFiltrar("caminhada")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all cursor-pointer ${
+                categoriaAtiva === "caminhada"
+                  ? "bg-black text-white shadow"
+                  : "bg-white text-gray-700 border hover:bg-gray-100"
+              }`}
+            >
+              Caminhada
+            </button>
+
+            <button
+              onClick={() => handleFiltrar("trilha")}
+              className={`px-4 py-2 rounded-lg font-medium text-sm transition-all cursor-pointer ${
+                categoriaAtiva === "trilha"
+                  ? "bg-black text-white shadow"
+                  : "bg-white text-gray-700 border hover:bg-gray-100"
+              }`}
+            >
+              Trilha
+            </button>
+          </div>
+
+          {categoriaAtiva && (
+            <button
+              onClick={() => {
+                setCategoriaAtiva("");
+                setPaginaAtual(1);
+              }}
+              className="text-xs text-gray-500 hover:text-black underline cursor-pointer"
+            >
+              Limpar filtro
+            </button>
+          )}
+        </div>
+
+        {/* exibiçao de atividades */}
+        <div className="flex-1">
+          {loading ? (
+            <p className="text-gray-500 italic">Carregando atividades...</p>
+          ) : (
+            <CardActivity atividades={atividades} />
+          )}
+        </div>
+
+        {/* 4 itens por pagina */}
+        <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-300">
+          <button
+            disabled={paginaAtual <= 1}
+            onClick={() => setPaginaAtual((prev) => prev - 1)}
+            className="px-4 py-1.5 bg-white border border-gray-300 text-sm rounded-md font-medium text-gray-700 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Anterior
+          </button>
+
+          <span className="text-sm font-medium text-gray-600">
+            Página {paginaAtual} de {totalPaginas}
+          </span>
+
+          <button
+            disabled={paginaAtual >= totalPaginas}
+            onClick={() => setPaginaAtual((prev) => prev + 1)}
+            className="px-4 py-1.5 bg-white border border-gray-300 text-sm rounded-md font-medium text-gray-700 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+          >
+            Próxima
+          </button>
+        </div>
+      </main>
+
+      {/* modais */}
 
         <div className="">
           <CardActivity></CardActivity>
@@ -121,4 +267,5 @@ export default function Home() {
       )}
     </div>
   );
+}
 }
