@@ -1,4 +1,4 @@
-import { Dumbbell, Share2 } from "lucide-react";
+import { Dumbbell, Plus, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ButtonSideBar from "../components/ButtonSideBar";
 import LoginButton from "../components/LoginButton";
@@ -56,11 +56,13 @@ export default function Home() {
             </a>
           )}
         </div>
-        <div className="flex justify-center mt-15">
+        <div className="flex flex-col items-center gap-8 justify-center mt-15">
           <ButtonSideBar
             name={"Atividades"}
             icon={<Dumbbell color="#ACABAA"></Dumbbell>}
           ></ButtonSideBar>
+          { isLoggedIn ? <ButtonSideBar name={'Nova Atividade'} icon={<Plus color="#ACABAA"></Plus>}>
+          </ButtonSideBar> : null}
         </div>
         <a className="flex mt-auto justify-center mb-15 ">
           <Share2
