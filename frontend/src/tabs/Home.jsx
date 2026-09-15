@@ -6,34 +6,51 @@ import ModalLogin from "../components/ModalLogin";
 import ModalCadastro from "../components/ModalCadastro";
 import { verificarTokenUsuario } from "../services/Login.service";
 import CardActivity from "../components/CardActivity";
+import { buscarTodasAtividades } from "../services/Atividade.service";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalLogin, setModalLogin] = useState(false);
   const [modalCadastro, setModalCadastro] = useState(false);
+  const [atividades, setAtividades] = useState([]);
+  const [limit, setLimit] = useState(6);
+  const [page, setPage] = useState(2);
+
+  useEffect(() => {
+    const buscarAtividades = async () => {
+      const response = await buscarTodasAtividades(page, limit);
+
+      if (response.success) {
+        console.log(response);
+        setAtividades(response.data);
+      } else {
+        alert("Erro ao buscar atividades, tente recarregar a página");
+      }
+    };
+
+    buscarAtividades();
+  }, []);
 
   useEffect(() => {
     const verificarToken = async () => {
-
       const token = localStorage.getItem("token");
 
       const response = await verificarTokenUsuario(token);
 
-      if(response.success){
-        setIsLoggedIn(true)
-      }
-      else {
-        return
+      if (response.success) {
+        setIsLoggedIn(true);
+      } else {
+        return;
       }
     };
 
-    verificarToken()
+    verificarToken();
 
     if (isLoggedIn) {
       closeModalLogin();
       alert("Usuário logado");
     }
-  }, [isLoggedIn]);
+  }, []);
 
   const closeModalLogin = () => {
     setModalLogin(false);
@@ -44,7 +61,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0]">
+    <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0] overflow-hidden">
       <div className="flex flex-col w-70 h-full bg-[#333333]">
         <a className="flex justify-center text-4xl text-[#F3F0F0] mt-10">
           SAEPSaúde
@@ -61,8 +78,12 @@ export default function Home() {
             name={"Atividades"}
             icon={<Dumbbell color="#ACABAA"></Dumbbell>}
           ></ButtonSideBar>
-          { isLoggedIn ? <ButtonSideBar name={'Nova Atividade'} icon={<Plus color="#ACABAA"></Plus>}>
-          </ButtonSideBar> : null}
+          {isLoggedIn ? (
+            <ButtonSideBar
+              name={"Nova Atividade"}
+              icon={<Plus color="#ACABAA"></Plus>}
+            ></ButtonSideBar>
+          ) : null}
         </div>
         <a className="flex mt-auto justify-center mb-15 ">
           <Share2
@@ -88,9 +109,17 @@ export default function Home() {
           )}
         </div>
 
-
-        <div className="">
-          <CardActivity></CardActivity>
+        <div className=" flex flex-col ">
+          <div className=" flex justify-center">
+            <p className="font-bold text-5xl">Atividades</p>
+          </div>
+          <div className="flex flex-wrap gap-20 mt-20 justify-center">
+            {atividades.map((atividade, index) => {
+              return (
+                <CardActivity atividade={atividade} key={index}></CardActivity>
+              );
+            })}
+          </div>
         </div>
       </main>
 
