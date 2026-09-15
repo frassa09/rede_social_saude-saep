@@ -12,18 +12,16 @@ export default function Home() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalCadastro, setModalCadastro] = useState(false);
 
-  //estados dos filtros de paginacao
+  // Estados dos filtros de paginação
   const [categoriaAtiva, setCategoriaAtiva] = useState("");
   const [paginaAtual, setPaginaAtual] = useState(1);
   const [atividades, setAtividades] = useState([]);
   const [totalPaginas, setTotalPaginas] = useState(1);
   const [loading, setLoading] = useState(false);
 
+  // Verificar token ao carregar o componente
   useEffect(() => {
     const verificarToken = async () => {
-  useEffect(() => {
-    const verificarToken = async () => {
-
       const token = localStorage.getItem("token");
       if (!token) return;
 
@@ -40,7 +38,7 @@ export default function Home() {
     verificarToken();
   }, []);
 
-  //busca as atividades sempre que trocar a categoria ou a página
+  // Busca as atividades sempre que trocar a categoria ou a página
   useEffect(() => {
     carregarAtividades();
   }, [categoriaAtiva, paginaAtual]);
@@ -48,7 +46,6 @@ export default function Home() {
   const carregarAtividades = async () => {
     setLoading(true);
     try {
-      // parametros com limite de 4 itens por pagina
       const params = new URLSearchParams({
         pagina: paginaAtual,
         limite: 4,
@@ -74,7 +71,7 @@ export default function Home() {
 
   const handleFiltrar = (categoria) => {
     if (!isLoggedIn) {
-      setModalLogin(true); 
+      setModalLogin(true);
       return;
     }
 
@@ -83,11 +80,6 @@ export default function Home() {
     setPaginaAtual(1);
   };
 
-  const closeModalLogin = () => setModalLogin(false);
-  const closeModalCadastro = () => setModalCadastro(false);
-
-  return (
-    <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0]">
   const closeModalLogin = () => setModalLogin(false);
   const closeModalCadastro = () => setModalCadastro(false);
 
@@ -124,27 +116,20 @@ export default function Home() {
         </div>
       </div>
 
-      {/* conteudo principal */}
-      <main className="flex flex-1 flex-col p-6 overflow-y-auto">
-        <div className="flex h-20 justify-end gap-4 items-center mr-10">
-          {!isLoggedIn && (
       {/* CONTEÚDO PRINCIPAL */}
-      <main className="flex flex-1 flex-col">
+      <main className="flex flex-1 flex-col p-6 overflow-y-auto">
+        {/* CABEÇALHO / LOGIN */}
         <div className="flex h-20 justify-end gap-4 items-center mr-10">
           {isLoggedIn ? (
-            /* FEEDBACK VISUAL DE USUÁRIO CONECTADO + BOTAO DE SAIR */
             <div className="flex items-center gap-4">
               <span className="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
                 ● Conectado
               </span>
-              
               <LoginButton
-              name={"Sair"}
+                name={"Sair"}
                 onClick={fazerLogout}
                 className="text-sm text-red-600 hover:underline cursor-pointer"
-              >
-                
-              </LoginButton>
+              />
             </div>
           ) : (
             <>
@@ -153,7 +138,6 @@ export default function Home() {
                 onClick={() => setModalCadastro(true)}
               />
               <LoginButton
-                name={"Login"}
                 name={"Entrar"}
                 onClick={() => setModalLogin(true)}
               />
@@ -161,7 +145,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* filtros por categoria */}
+        {/* FILTROS POR CATEGORIA */}
         <div className="flex items-center justify-between border-b border-gray-300 pb-4 mb-6">
           <div className="flex gap-3">
             <button
@@ -211,7 +195,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* exibiçao de atividades */}
+        {/* EXIBIÇÃO DE ATIVIDADES */}
         <div className="flex-1">
           {loading ? (
             <p className="text-gray-500 italic">Carregando atividades...</p>
@@ -220,7 +204,7 @@ export default function Home() {
           )}
         </div>
 
-        {/* 4 itens por pagina */}
+        {/* PAGINAÇÃO */}
         <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-300">
           <button
             disabled={paginaAtual <= 1}
@@ -244,17 +228,6 @@ export default function Home() {
         </div>
       </main>
 
-      {/* modais */}
-
-        <div className="">
-          <CardActivity></CardActivity>
-          <CardActivity></CardActivity>
-          <CardActivity></CardActivity>
-          <CardActivity></CardActivity>
-          
-        </div>
-      </main>
-
       {/* MODAIS */}
       {modalLogin && (
         <ModalLogin
@@ -267,5 +240,4 @@ export default function Home() {
       )}
     </div>
   );
-}
 }
