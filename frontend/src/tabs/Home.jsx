@@ -12,24 +12,29 @@ export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalLogin, setModalLogin] = useState(false);
   const [modalCadastro, setModalCadastro] = useState(false);
+  const [isloading, setIsloading] = useState(false)
   const [atividades, setAtividades] = useState([]);
   const [limit, setLimit] = useState(6);
   const [page, setPage] = useState(2);
 
   useEffect(() => {
+
     const buscarAtividades = async () => {
+      setIsloading(true)
       const response = await buscarTodasAtividades(page, limit);
 
       if (response.success) {
         console.log(response);
         setAtividades(response.data);
+        setIsloading(false)
       } else {
         alert("Erro ao buscar atividades, tente recarregar a página");
+        setIsloading(false)
       }
     };
 
     buscarAtividades();
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const verificarToken = async () => {
@@ -63,7 +68,7 @@ export default function Home() {
     setIsLoggedIn(false);
   };
 
-  return (
+  return  (
     <div className="flex z-0 h-screen flex-row w-full bg-[#F3F0F0] overflow-hidden">
       <div className="flex flex-col w-70 h-full bg-[#333333]">
         <h1 className="flex justify-center text-4xl text-[#F3F0F0] mt-10 font-bold">
