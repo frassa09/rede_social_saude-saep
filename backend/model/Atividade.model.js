@@ -10,19 +10,19 @@ export const Atividade = sequelize.define(
       allowNull: false,
     },
     distancia_percorrida: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     duracao_atividade: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     quantidade_calorias: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
     curtidas: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false,
       defaultValue: 0
     }
