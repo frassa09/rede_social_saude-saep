@@ -12,38 +12,46 @@ export default function ModalLogin({ closeModal, setIsLoggedIn }) {
   const [senha, setSenha] = useState("");
 
   const logarUsuario = async () => {
-    //limpando inputs antigos
     setMensagemErro("");
     setMensagemSucesso("");
     setLogando(true);
 
-    const objValidateLogin = { email, senha };
-    const objLogin = schemaLoginUsuario.safeParse(objValidateLogin);
+    try {
+      const objValidateLogin = { email, senha };
+      const objLogin = schemaLoginUsuario.safeParse(objValidateLogin);
 
-    if (!objLogin.success) {
-      // Captura a mensagem do erro tratada no schema do Zod
-      const erroZod = objLogin.error.issues[0]?.message || "Verifique as informações digitadas.";
-      setMensagemErro(erroZod);
+      if (!objLogin.success) {
+        const erroZod =
+          objLogin.error.issues[0]?.message ||
+          "Verifique as informações digitadas.";
+        setMensagemErro(erroZod);
+        setLogando(false);
+        return;
+      }
+
+      const response = await loginUsuario(objLogin.data);
+
+      if (response && response.success) {
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+        }
+        setIsLoggedIn(true);
+        setMensagemSucesso("Login realizado com sucesso!");
+
+        setTimeout(() => {
+          closeModal();
+        }, 1500);
+      } else {
+        setMensagemErro(
+          response?.message || "E-mail ou senha incorretos."
+        );
+      }
+    } catch (error) {
+      console.error("Erro no login:", error);
+      setMensagemErro("Não foi possível conectar ao servidor.");
+    } finally {
       setLogando(false);
-      return;
     }
-
-    const response = await loginUsuario(objLogin.data);
-
-    if (response && response.success) {
-      localStorage.setItem("token", response.token);
-      setIsLoggedIn(true);
-      setMensagemSucesso("Login realizado com sucesso!");
-      
-      // Dá tempo do usuário ver a mensagem de sucesso antes de fechar o modal
-      setTimeout(() => {
-        closeModal();
-      }, 1500);
-    } else {
-      setMensagemErro("E-mail ou senha incorretos.");
-    }
-
-    setLogando(false);
   };
 
   return (
@@ -57,14 +65,12 @@ export default function ModalLogin({ closeModal, setIsLoggedIn }) {
         </div>
 
         <div className="flex flex-col items-center mt-5 gap-6">
-          {/* MENSAGEM VISUAL DE ERRO */}
           {mensagemErro && (
             <div className="bg-red-100 border border-red-400 text-red-700 text-sm font-medium px-4 py-2 rounded-md w-100 text-center">
               {mensagemErro}
             </div>
           )}
 
-          {/* MENSAGEM VISUAL DE SUCESSO */}
           {mensagemSucesso && (
             <div className="bg-green-100 border border-green-400 text-green-700 text-sm font-medium px-4 py-2 rounded-md w-100 text-center">
               {mensagemSucesso}
@@ -78,6 +84,7 @@ export default function ModalLogin({ closeModal, setIsLoggedIn }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+
           <Input
             placeholder={"Senha"}
             type="password"
