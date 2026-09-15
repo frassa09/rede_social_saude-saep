@@ -53,7 +53,7 @@ export default function Home() {
       alert("Usuário logado");
     }
   }, []);
-  }, []);
+
 
   const closeModalLogin = () => setModalLogin(false);
   const closeModalCadastro = () => setModalCadastro(false);
