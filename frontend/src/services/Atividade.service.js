@@ -1,30 +1,24 @@
-const API_URL = import.meta.env?.VITE_API_URL || 'http://localhost:3333';
+const api_url = import.meta.env.VITE_API_URL;
 
-export const getAtividades = async (categoria = '', pagina = 1, limite = 4) => {
-  try {
-    const token = localStorage.getItem('token');
-    
-    //monta a query string com tipo_atividade, pagina e limite
-    const queryParams = new URLSearchParams({
-      pagina,
-      limite,
-      ...(categoria && { tipo_atividade: categoria }),
-    });
 
-    const response = await fetch(`${API_URL}/atividade?${queryParams.toString()}`, {
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-    });
+export const buscarTodasAtividades = async (page, limit) => {
 
-    if (!response.ok) {
-      throw new Error('Falha ao buscar atividades');
+    try {
+
+        const token = localStorage.getItem('token')
+
+        const response = await fetch(`${api_url}/atividade/auth/all/${page}/${limit}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+
+        const data = await response.json()
+
+        return data
     }
+    catch(err){
 
-    return await response.json();
-  } catch (error) {
-    console.error('Erro na requisição de atividades:', error);
-    return null;
-  }
-};
+        console.error(err.message);
+    }
+}

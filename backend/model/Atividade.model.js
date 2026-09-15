@@ -10,17 +10,22 @@ export const Atividade = sequelize.define(
       allowNull: false,
     },
     distancia_percorrida: {
-      type: DataTypes.TEXT,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     duracao_atividade: {
-      type: DataTypes.TEXT,
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
     quantidade_calorias: {
-      type: DataTypes.TEXT,
+      type: DataTypes.FLOAT,
       allowNull: true,
     },
+    curtidas: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
+    }
   },
   { timestamps: true, tableName: "atividade" },
 );
@@ -118,6 +123,6 @@ export const seedAtividades = async () => {
         usuario_id: usuarioExemplo.id,
       },
     ],
-    { validate: true, updateOnDuplicate: ['tipo_atividade', 'distancia_percorrida', 'duracao atividade', 'quantidade_calorias', 'usuario_id'] },
+    { validate: true, updateOnDuplicate: ['tipo_atividade', 'distancia_percorrida', 'duracao_atividade', 'quantidade_calorias', 'usuario_id'] },
   );
 };
