@@ -7,6 +7,7 @@ import { sequelize } from './database/init.js'
 import { corsConfig } from './middlewares/cors.config.js'
 import { routerUsuario } from './routes/Usuario.routes.js'
 import { routerAuthUsuario } from './routes/Usuario.auth.routes.js'
+import { routerAtividades } from './routes/Atividade.auth.routes.js'
 
 
 const app = express()
@@ -21,6 +22,7 @@ app.use(corsConfig)
 
 app.use('/usuario', routerUsuario)
 app.use('/usuario/auth', routerAuthUsuario)
+app.use('/atividade/auth', routerAtividades)
 
 app.get('/', (req, res) => {
 
