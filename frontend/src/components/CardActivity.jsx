@@ -1,12 +1,14 @@
 import { Heart, MessageSquare } from "lucide-react";
 
-export default function CardActivity({ activity }) {
-  //const {distancia, duracao, calorias} = activity
+export default function CardActivity({ atividade }) {
+  const { tipo_atividade, distancia_percorrida, duracao_atividade, quantidade_calorias, curtidas} = atividade
+
+  
   return (
-    <div className="flex flex-col shadow-gray-400 shadow bg-white w-100 h-60 rounded-xl ml-20 mt-15">
+    <div className="flex flex-col shadow-gray-400 shadow bg-white w-100 h-60 rounded-xl">
       <div className="flex justify-center ">
         <p className="flex justify-center w-[95%] h-10 text-3xl font-bold border-b-2 border-[#F3F0F0] mt-5">
-          Titulo
+          {tipo_atividade.toUpperCase()}
         </p>
       </div>
       <div className="flex self-center w-[95%] mt-5 justify-between">
@@ -22,18 +24,18 @@ export default function CardActivity({ activity }) {
         </div>
       </div>
       <div className="flex self-center w-[95%] mt-5 justify-center h-15 rounded bg-[#E4E2E1]">
-        <div className="flex items-center text-[13px]">
+        <div className="flex items-center text-[12px]">
           <div className="flex flex-col items-center border-r border-[#C8C6C6] pr-7">
-            <p>DISTÂNCIA</p>
-            <p className=" font-bold ">{11}</p>
+            <p>DISTÂNCIA (m)</p>
+            <p className=" font-bold ">{distancia_percorrida}</p>
           </div>
           <div className="flex flex-col items-center px-7">
-            <p>DURAÇÃO</p>
-            <p className=" font-bold ">{11}</p>
+            <p>DURAÇÃO (min)</p>
+            <p className=" font-bold ">{duracao_atividade}</p>
           </div>
           <div className="flex flex-col  items-center border-l border-[#C8C6C6] pl-7">
-            <p>CALORIAS</p>
-            <p className=" font-bold ">{11}</p>
+            <p>CALORIAS (kcal)</p>
+            <p className=" font-bold ">{quantidade_calorias}</p>
           </div>
         </div>
       </div>
