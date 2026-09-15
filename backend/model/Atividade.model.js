@@ -24,14 +24,19 @@ export const Atividade = sequelize.define(
     curtidas: {
       type: DataTypes.FLOAT,
       allowNull: false,
-      defaultValue: 0
-    }
+      defaultValue: 0,
+    },
   },
   { timestamps: true, tableName: "atividade" },
 );
 
 export const seedAtividades = async () => {
+  const quantidadeAtual = await Atividade.count();
 
+  if (quantidadeAtual > 0) {
+    console.log("Seed de Atividades pulado: O banco já possui registros.");
+    return;
+  }
 
   const usuarioExemplo = await Usuario.findOne({
     where: { email: "usuario1@email.com" },
@@ -123,6 +128,15 @@ export const seedAtividades = async () => {
         usuario_id: usuarioExemplo.id,
       },
     ],
-    { validate: true, updateOnDuplicate: ['tipo_atividade', 'distancia_percorrida', 'duracao atividade', 'quantidade_calorias', 'usuario_id'] },
+    {
+      validate: true,
+      updateOnDuplicate: [
+        "tipo_atividade",
+        "distancia_percorrida",
+        "duracao atividade",
+        "quantidade_calorias",
+        "usuario_id",
+      ],
+    },
   );
 };
