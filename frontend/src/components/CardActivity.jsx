@@ -1,7 +1,9 @@
 import { Heart, MessageSquare } from "lucide-react";
 
 export default function CardActivity({ atividade }) {
-  const { tipo_atividade, distancia_percorrida, duracao_atividade, quantidade_calorias, curtidas} = atividade
+  const { tipo_atividade, distancia_percorrida, duracao_atividade, quantidade_calorias, curtidas, createdAt } = atividade
+
+  const timestamp = createdAt.toLocaleString('pt-BR')
 
   
   return (
