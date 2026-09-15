@@ -6,6 +6,11 @@ export const sequelize = new Sequelize({
     host: process.env.DB_HOST,
     password: process.env.DB_PASSWORD,
     username: process.env.DB_USER,
-    port: process.env.DB_PORT,
     dialect: 'postgres',
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    }
 })

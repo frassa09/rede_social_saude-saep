@@ -31,9 +31,15 @@ app.get('/', (req, res) => {
 
 
 
-sequelize.sync({alter: true, force: true}).then(async () => {
-    await seedUsers()
-    await seedAtividades()
+sequelize.sync({alter: true}).then(async () => {
+    try {
+        await seedUsers()
+        await seedAtividades()
+    } catch (erro) {
+        // Ignora erro de seed duplicado e segue o baile!
+        console.log("Seeds já existem no banco. Ignorando...")
+    }
+
     app.listen(port, () => {
         console.log(`Aplicação rodando com sucesso em http://localhost:${port}`)
     })
