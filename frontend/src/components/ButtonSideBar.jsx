@@ -1,4 +1,4 @@
-export default function ButtonSideBar({ name, onClick, icon, onHover }) {
+export default function ButtonSideBar({ name, onClick, icon }) {
   return (
     <button
       onClick={() => onClick()}
