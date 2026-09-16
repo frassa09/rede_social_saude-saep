@@ -5,40 +5,52 @@ import { loginUsuario } from "../services/Login.service";
 
 export default function ModalLogin({ closeModal, setIsLoggedIn }) {
   const [logando, setLogando] = useState(false);
-  const [msgParaUsuario, setMsgParaUsuario] = useState('')
+  const [mensagemErro, setMensagemErro] = useState("");
+  const [mensagemSucesso, setMensagemSucesso] = useState("");
+
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
   const logarUsuario = async () => {
+    setMensagemErro("");
+    setMensagemSucesso("");
     setLogando(true);
 
-    const objValidateLogin = {
-      email,
-      senha,
-    };
+    try {
+      const objValidateLogin = { email, senha };
+      const objLogin = schemaLoginUsuario.safeParse(objValidateLogin);
 
-    const objLogin = schemaLoginUsuario.safeParse(objValidateLogin);
+      if (!objLogin.success) {
+        const erroZod =
+          objLogin.error.issues[0]?.message ||
+          "Verifique as informações digitadas.";
+        setMensagemErro(erroZod);
+        setLogando(false);
+        return;
+      }
 
-    if (objLogin.success) {
       const response = await loginUsuario(objLogin.data);
 
-      console.log(response)
+      if (response && response.success) {
+        if (response.token) {
+          localStorage.setItem("token", response.token);
+        }
+        setIsLoggedIn(true);
+        setMensagemSucesso("Login realizado com sucesso!");
 
-      if(response.success){
-        console.log('usuario logado')
-        localStorage.setItem('token', response.token)
-        setIsLoggedIn(true)
-        setLogando(false)
+        setTimeout(() => {
+          closeModal();
+        }, 1500);
+      } else {
+        setMensagemErro(
+          response?.message || "E-mail ou senha incorretos."
+        );
       }
-      else {
-        alert('Login incorreto, corrija as informações e tente novamente')
-      }
-
+    } catch (error) {
+      console.error("Erro no login:", error);
+      setMensagemErro("Não foi possível conectar ao servidor.");
+    } finally {
       setLogando(false);
-    } else {
-      alert("Algum campo está com informações incompletas ou incorretas!");
-      setLogando(false);
-      return console.error(objLogin.error);
     }
   };
 
@@ -47,33 +59,52 @@ export default function ModalLogin({ closeModal, setIsLoggedIn }) {
       className="flex absolute z-10 h-full justify-center w-full bg-black/50"
       onClick={(e) => (e.target === e.currentTarget ? closeModal() : null)}
     >
-      <div className="h-75 w-150 bg-[#F3F0F0] self-center mb-30 rounded-2xl border border-[#2F3131]">
-        <div className=" flex justify-center border-b pb-3">
-          <a className=" text-2xl mt-4 ">Login</a>
-          <a>{}</a>
+      <div className="p-4 w-150 bg-[#F3F0F0] self-center mb-30 rounded-2xl border border-[#2F3131]">
+        <div className="flex justify-center border-b pb-3">
+          <h2 className="text-2xl mt-4 font-semibold text-[#2F3131]">Login</h2>
         </div>
-        <div className="flex flex-col items-center mt-5 gap-8">
+
+        <div className="flex flex-col items-center mt-5 gap-6">
+          {mensagemErro && (
+            <div className="bg-red-100 border border-red-400 text-red-700 text-sm font-medium px-4 py-2 rounded-md w-100 text-center">
+              {mensagemErro}
+            </div>
+          )}
+
+          {mensagemSucesso && (
+            <div className="bg-green-100 border border-green-400 text-green-700 text-sm font-medium px-4 py-2 rounded-md w-100 text-center">
+              {mensagemSucesso}
+            </div>
+          )}
+
           <Input
             placeholder={"Email"}
+            type="email"
             label={"Insira seu e-mail"}
-            onChange={(e) => setEmail(e.currentTarget.value)}
-          ></Input>
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+
           <Input
             placeholder={"Senha"}
+            type="password"
             label={"Insira sua senha"}
-            onChange={(e) => setSenha(e.currentTarget.value)}
-          ></Input>
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+          />
 
           <div className="flex flex-1 mt-2 self-center justify-end gap-5 w-100">
             <button
-              className=" border hover:scale-105 transition-transform duration-300 rounded-md w-20 bg-black text-[#E4E2E1]"
-              onClick={() => logarUsuario()}
+              disabled={logando}
+              className="border hover:scale-105 transition-transform duration-300 rounded-md w-24 bg-black text-[#E4E2E1] py-1 disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={logarUsuario}
             >
-              {logando ? "Carregando" : "Login"}
+              {logando ? "Entrando..." : "Login"}
             </button>
             <button
-              className="rounded-md hover:scale-105 transition-transform duration-300 w-20"
-              onClick={() => closeModal()}
+              disabled={logando}
+              className="rounded-md hover:scale-105 transition-transform duration-300 w-20 py-1 disabled:opacity-50"
+              onClick={closeModal}
             >
               Cancelar
             </button>

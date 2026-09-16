@@ -11,9 +11,11 @@ export const cadastrarUsuario = async (usuario) => {
     });
 
     const data = await response.json();
-
     console.log(data);
+    return { success: response.ok, ...data };
+
   } catch (err) {
-    console.error(err.message);
+    console.error("Erro na requisição de cadastro:", err.message);
+    return { success: false, message: "Erro ao conectar com o servidor." };
   }
 };
