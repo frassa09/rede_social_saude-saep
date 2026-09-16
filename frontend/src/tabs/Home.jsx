@@ -1,4 +1,11 @@
-import { ChevronLeft, ChevronRight, ChevronsRight, Dumbbell, Plus, Share2 } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsRight,
+  Dumbbell,
+  Plus,
+  Share2,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import ButtonSideBar from "../components/ButtonSideBar";
 import LoginButton from "../components/LoginButton";
@@ -7,6 +14,7 @@ import ModalCadastro from "../components/ModalCadastro";
 import { verificarTokenUsuario } from "../services/Login.service";
 import CardActivity from "../components/CardActivity";
 import { buscarTodasAtividades } from "../services/Atividade.service";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,7 +23,10 @@ export default function Home() {
   const [atividades, setAtividades] = useState([]);
   const [limit, setLimit] = useState(6);
   const [page, setPage] = useState(1);
-  const [maxPages, setMaxPages] = useState('')
+  const [maxPages, setMaxPages] = useState("");
+
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const buscarAtividades = async () => {
@@ -25,14 +36,16 @@ export default function Home() {
         console.log(response);
         setAtividades(response.data.rows);
 
-        setMaxPages(Math.ceil(response.data.count / limit))
+        setMaxPages(Math.ceil(response.data.count / limit));
       } else {
-        alert("Erro ao buscar atividades, tente recarregar a página");
+        if (isLoggedIn) {
+          alert("Erro ao buscar atividades, tente recarregar a página");
+        }
       }
     };
 
     buscarAtividades();
-  }, [page]);
+  }, [isLoggedIn, page]);
 
   useEffect(() => {
     const verificarToken = async () => {
@@ -83,11 +96,13 @@ export default function Home() {
           <ButtonSideBar
             name={"Atividades"}
             icon={<Dumbbell color="#ACABAA"></Dumbbell>}
+            onClick={() => navigate("/")}
           ></ButtonSideBar>
           {isLoggedIn ? (
             <ButtonSideBar
               name={"Nova Atividade"}
               icon={<Plus color="#ACABAA"></Plus>}
+              onClick={() => navigate("/criaratividade")}
             ></ButtonSideBar>
           ) : null}
         </div>
@@ -98,8 +113,6 @@ export default function Home() {
           />
         </div>
       </div>
-
-      {/* CONTEÚDO PRINCIPAL */}
       <main className="flex flex-1 flex-col">
         <div className="flex h-20 justify-end gap-4 items-center mr-10">
           {isLoggedIn ? (
@@ -108,14 +121,12 @@ export default function Home() {
               <span className="text-sm font-medium text-green-700 bg-green-100 px-3 py-1 rounded-full border border-green-300">
                 ● Conectado
               </span>
-              
+
               <LoginButton
-              name={"Sair"}
+                name={"Sair"}
                 onClick={fazerLogout}
                 className="text-sm text-red-600 hover:underline cursor-pointer"
-              >
-                
-              </LoginButton>
+              ></LoginButton>
             </div>
           ) : (
             <>
@@ -131,47 +142,66 @@ export default function Home() {
           )}
         </div>
 
-        <div className=" flex flex-col ">
-          <div className=" flex justify-center">
-            <p className="font-bold text-5xl">Atividades</p>
-          </div>
-          <div className="flex flex-wrap gap-20 mt-20 justify-center">
-            {atividades.map((atividade, index) => {
-              return (
-                <CardActivity atividade={atividade} key={index}></CardActivity>
-              );
-            })}
-          </div>
-        </div>
+        {isLoggedIn ? (
+          <div>
+            <div className=" flex flex-col ">
+              <div className=" flex justify-center">
+                <p className="font-bold text-5xl">Atividades</p>
+              </div>
+              <div className="flex flex-wrap gap-20 mt-20 justify-center">
+                {atividades.map((atividade, index) => {
+                  return (
+                    <CardActivity
+                      atividade={atividade}
+                      key={index}
+                    ></CardActivity>
+                  );
+                })}
+              </div>
+            </div>
 
-        <div className=" flex justify-center mt-25">
-          <button className="border w-6 cursor-pointer" onClick={() => page > 1 ? setPage(page - 1) : null}>
-            <ChevronLeft></ChevronLeft>
-          </button>
-          <button className="border w-6 bg-blue-300 cursor-pointer">
-            {page}
-          </button>
-          <button
-            className="border w-6 cursor-pointer"
-            onClick={() => maxPages >= page + 1 ? setPage(page + 1) : null}
-          >
-            {maxPages >= page + 1 ? page + 1 : null}
-          </button>
-          <button
-            className="border w-6 cursor-pointer"
-            onClick={() => maxPages >= page + 2 ? setPage(page + 2) : null}
-          >
-            {maxPages >= page + 2 ? page + 2 : null}
-          </button>
-          <button className="border w-6 cursor-pointer" onClick={() => page < maxPages ? setPage(page + 1) : null}>
-            <ChevronRight></ChevronRight>
-          </button>
-          <button className="border w-6 cursor-pointer" onClick={() => setPage(maxPages)}>
-            <ChevronsRight></ChevronsRight>
-          </button>
-        </div>
+            <div className=" flex justify-center mt-25">
+              <button
+                className="border w-6 cursor-pointer"
+                onClick={() => (page > 1 ? setPage(page - 1) : null)}
+              >
+                <ChevronLeft></ChevronLeft>
+              </button>
+              <button className="border w-6 bg-blue-300 cursor-pointer">
+                {page}
+              </button>
+              <button
+                className="border w-6 cursor-pointer"
+                onClick={() =>
+                  maxPages >= page + 1 ? setPage(page + 1) : null
+                }
+              >
+                {maxPages >= page + 1 ? page + 1 : null}
+              </button>
+              <button
+                className="border w-6 cursor-pointer"
+                onClick={() =>
+                  maxPages >= page + 2 ? setPage(page + 2) : null
+                }
+              >
+                {maxPages >= page + 2 ? page + 2 : null}
+              </button>
+              <button
+                className="border w-6 cursor-pointer"
+                onClick={() => (page < maxPages ? setPage(page + 1) : null)}
+              >
+                <ChevronRight></ChevronRight>
+              </button>
+              <button
+                className="border w-6 cursor-pointer"
+                onClick={() => setPage(maxPages)}
+              >
+                <ChevronsRight></ChevronsRight>
+              </button>
+            </div>
+          </div>
+        ) : null}
       </main>
-
       {/* MODAIS */}
       {modalLogin && (
         <ModalLogin
@@ -179,9 +209,7 @@ export default function Home() {
           setIsLoggedIn={setIsLoggedIn}
         />
       )}
-      {modalCadastro && (
-        <ModalCadastro closeModal={closeModalCadastro} />
-      )}
+      {modalCadastro && <ModalCadastro closeModal={closeModalCadastro} />}
     </div>
   );
 }
