@@ -1,4 +1,4 @@
-import { Dumbbell, Plus, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsRight, Dumbbell, Plus, Share2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import ButtonSideBar from "../components/ButtonSideBar";
 import LoginButton from "../components/LoginButton";
@@ -14,7 +14,8 @@ export default function Home() {
   const [modalCadastro, setModalCadastro] = useState(false);
   const [atividades, setAtividades] = useState([]);
   const [limit, setLimit] = useState(6);
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
+  const [maxPages, setMaxPages] = useState('')
 
   useEffect(() => {
     const buscarAtividades = async () => {
@@ -22,14 +23,16 @@ export default function Home() {
 
       if (response.success) {
         console.log(response);
-        setAtividades(response.data);
+        setAtividades(response.data.rows);
+
+        setMaxPages(Math.ceil(response.data.count / limit))
       } else {
         alert("Erro ao buscar atividades, tente recarregar a página");
       }
     };
 
     buscarAtividades();
-  }, []);
+  }, [page]);
 
   useEffect(() => {
     const verificarToken = async () => {
@@ -47,13 +50,13 @@ export default function Home() {
     };
 
     verificarToken();
+  }, []);
 
+  useEffect(() => {
     if (isLoggedIn) {
       closeModalLogin();
-      alert("Usuário logado");
     }
-  }, []);
-  }, []);
+  }, [isLoggedIn]);
 
   const closeModalLogin = () => setModalLogin(false);
   const closeModalCadastro = () => setModalCadastro(false);
@@ -139,6 +142,33 @@ export default function Home() {
               );
             })}
           </div>
+        </div>
+
+        <div className=" flex justify-center mt-25">
+          <button className="border w-6 cursor-pointer" onClick={() => page > 1 ? setPage(page - 1) : null}>
+            <ChevronLeft></ChevronLeft>
+          </button>
+          <button className="border w-6 bg-blue-300 cursor-pointer">
+            {page}
+          </button>
+          <button
+            className="border w-6 cursor-pointer"
+            onClick={() => maxPages >= page + 1 ? setPage(page + 1) : null}
+          >
+            {maxPages >= page + 1 ? page + 1 : null}
+          </button>
+          <button
+            className="border w-6 cursor-pointer"
+            onClick={() => maxPages >= page + 2 ? setPage(page + 2) : null}
+          >
+            {maxPages >= page + 2 ? page + 2 : null}
+          </button>
+          <button className="border w-6 cursor-pointer" onClick={() => page < maxPages ? setPage(page + 1) : null}>
+            <ChevronRight></ChevronRight>
+          </button>
+          <button className="border w-6 cursor-pointer" onClick={() => setPage(maxPages)}>
+            <ChevronsRight></ChevronsRight>
+          </button>
         </div>
       </main>
 

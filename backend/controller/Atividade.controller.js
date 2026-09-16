@@ -26,7 +26,7 @@ export const controllerAtividade = {
 
     try {
 
-      const response = await Atividade.findAll({ offset: offset, limit: limit})
+      const response = await Atividade.findAndCountAll({ offset: offset, limit: limit})
 
       
       res.status(200).json({
